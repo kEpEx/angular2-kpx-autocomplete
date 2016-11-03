@@ -1,0 +1,29 @@
+{
+  "name": "angular2-kpx-autocomplete",
+  "version": "0.0.1",
+  "description": "Angular2 autocomplete",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kEpEx/angular2-kpx-autocomplete.git"
+  },
+  "keywords": [
+    "typescript",
+    "autocomplete"
+  ],
+  "author": "alfrednx@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kEpEx/angular2-kpx-autocomplete/issues"
+  },
+  "homepage": "https://github.com/kEpEx/angular2-kpx-autocomplete",
+  "dependencies": {
+    "@angular/common": "^2.1.2",
+    "@angular/core": "^2.1.2",
+    "@angular/forms": "^2.1.2",
+    "@angular/http": "^2.1.2",
+    "@angular/platform-browser": "^2.1.2",
+    "rxjs": "^5.0.0-beta.12",
+    "zone.js": "^0.6.26"
+  }
+}
