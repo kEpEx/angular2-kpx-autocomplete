@@ -5,7 +5,7 @@ import { AutocompleteItem, SelectedAutocompleteValue } from './models';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({ 
-    selector: 'tesla-autocomplete',
+    selector: 'kpx-autocomplete',
     styles: [`.autocomplete-selected { background-color: blue; }`],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => kpxAutocomplete), multi: true},
