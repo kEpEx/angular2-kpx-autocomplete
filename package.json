@@ -2,11 +2,14 @@
   "name": "angular2-kpx-autocomplete",
   "version": "0.0.3",
   "description": "Angular2 autocomplete",
-  "scripts": {},
+  "scripts": {
+    "prepublish": "tsc"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kEpEx/angular2-kpx-autocomplete.git"
   },
+  "typings": "./kpx-autocomplete.d.ts",
   "keywords": [
     "typescript",
     "autocomplete"
@@ -17,13 +20,28 @@
     "url": "https://github.com/kEpEx/angular2-kpx-autocomplete/issues"
   },
   "homepage": "https://github.com/kEpEx/angular2-kpx-autocomplete",
-  "dependencies": {
+  "peerDependencies": {
     "@angular/common": "^2.1.2",
+    "@angular/compiler": "^2.1.2",
     "@angular/core": "^2.1.2",
     "@angular/forms": "^2.1.2",
     "@angular/http": "^2.1.2",
     "@angular/platform-browser": "^2.1.2",
-    "rxjs": "^5.0.0-beta.12",
-    "zone.js": "^0.6.26"
+    "@angular/platform-browser-dynamic": "^2.1.2",
+    "typescript": "^2.0.0",
+    "zone.js": "^0.6.25"
+  },
+  "devDependencies": {
+    "@angular/common": "^2.1.2",
+    "@angular/compiler": "^2.1.2",
+    "@angular/core": "^2.1.2",
+    "@angular/forms": "^2.1.2",
+    "@angular/http": "^2.1.2",
+    "@angular/platform-browser": "^2.1.2",
+    "@angular/platform-browser-dynamic": "^2.1.2",
+    "@types/chai": "^3.4.34",
+    "rxjs": "^5.0.0-rc.2",
+    "typescript": "^2.1.1",
+    "zone.js": "^0.6.25"
   }
 }
