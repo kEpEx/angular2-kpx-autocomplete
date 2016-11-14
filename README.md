@@ -6,7 +6,7 @@ Angular2 Typescript Autocomplete
 
 Simple autocomplete to filter server side results, you will get the ID property on your model.
 
-![Example](!example.gif)
+![Example](example.gif)
 
 ## Installation
 
