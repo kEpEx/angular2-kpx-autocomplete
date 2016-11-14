@@ -1,11 +1,10 @@
-<div class="tesla-autocomplete-main">
-    <input type="text" 
-        [(ngModel)]="selected.Description" (focus)="onFocus()" 
-        (blur)="onBlur()" (keyup)="onKeyUp($event)"
-            />
-    <div *ngIf="showList" class="tesla-autocomplete-items">
-        <ul *ngFor="let item of list; let i=index;" >
-            <li [class.autocomplete-selected]="item.Selected" (click)="onClickOption(item, i)" >{{item.Selected ? '>' : ''}} {{item.ID}} - {{item.Name}}</li>
-        </ul>
-    </div>
-</div>
+<div class="kpx-autocomplete-main"><input type="text" 
+                    [(ngModel)]="selected.Description" (focus)="onFocus()"  (keydown)="onKeyDown($event)" 
+                    (blur)="onBlur()" (keyup)="onKeyUp($event)" class="input" placeholder="{{placeholder}}"
+                     />
+            <div *ngIf="showList && list.length > 0" class="menu">
+            <ul *ngFor="let item of list; let i=index;" class="menu-list">
+                <li [class.selected]="item.Selected" (click)="onClickOption(item, i)" class="menu-list-item">{{item.Name}}</li>
+            </ul>
+            </div>
+            </div>

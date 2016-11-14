@@ -7,26 +7,80 @@ import 'rxjs/add/operator/toPromise';
 
 @Component({ 
     selector: 'kpx-autocomplete',
-    styles: [`.autocomplete-selected { background-color: blue; }`],
+    styles: [`
+        .kpx-autocomplete-main {
+            position: relative;
+        }
+
+
+        .kpx-autocomplete-main  .menu {
+            min-width: 190px;
+            padding: 12px 0;
+            box-shadow: 0 9px 20px rgba(0, 0, 0, 0.25);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            z-index: 1000;
+            max-height: 350px;
+            overflow: auto;
+        }
+
+        .kpx-autocomplete-main  .col .menu {
+            width: 100%;
+        }
+
+        .kpx-autocomplete-main  .menu-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .kpx-autocomplete-main  .menu-list-item {
+            font-size: 14px;
+            color: #0c0c0c;
+            padding: 6px 20px;
+        }
+
+        .kpx-autocomplete-main  .menu-list-item.selected {
+            font-weight: bold;
+            background-color: #f2f4f6;
+        }
+
+        .kpx-autocomplete-main .menu-list-item:hover {
+            background: #f2f4f6;
+        }
+
+    `],
     providers: [
         {provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => kpxAutocompleteComponent), multi: true},
     ],
     templateUrl: './kpx-autocomplete.component.html'
  })
 export class kpxAutocompleteComponent implements ControlValueAccessor {
-    @Input('text-value') textValue :string;
+    @Input('text-value') 
+    set _textValue(value:any){
+        this.selected.Description = value;
+    }
+
     @Input('key-value') keyValue :string;
     @Input('data-property') dataPropertyName :string = "";
+    @Input('param-get-search') paramGetSearch :string = "search";
+
+    
 
     @Input('api-url') apiURL :string;
     @Input('id-field') nameIDField :string;
     @Input('description-field') nameDescriptionField :string;
+    @Input('min-chars') minChars :number = 1;
+    @Input('placeholder') placeholder :string = "";
 
     @Output('onSelect') onSelect: EventEmitter<string> = new EventEmitter<string>();
     
 
     private selected :SelectedAutocompleteValue;
     
+    private firstSet = true;
     private list :AutocompleteItem[];
     private showList :boolean = false;
     private indexSelected :number;
@@ -34,7 +88,6 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
 
     private dontBlur = false;
     
-
     constructor(public http: Http) {
         this.list = [];
         this.selected = new SelectedAutocompleteValue();
@@ -57,7 +110,7 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
     fetch(search:string):void {
         this.indexSelected = 0;
          this.http
-            .get(`${this.apiURL}?search=${search}`)
+            .get(`${this.apiURL}?${this.paramGetSearch}=${search}`)
             .toPromise()
             .then((response:any) => {
                 let ret = response.json();
@@ -83,16 +136,21 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
         }, 200);
     }
 
+    onKeyDown(event: KeyboardEvent) {
+        var key = event.keyCode;
+        if(key == 13) {
+            this.doSelectIndex(this.indexSelected);
+            this.showList = false;
+            event.preventDefault();
+        }
+    }
+
     onKeyUp(event: KeyboardEvent) {
         this.showList=true;
         var key = event.keyCode;
         if(key == 38 || key == 40 || key == 13) {
             if(key == 13) {
-                
-                this.doSelectIndex(this.indexSelected);
-
                 this.showList = false;
-                event.preventDefault();
             }
             else {
                 if(key == 40) this.indexSelected++;
@@ -102,23 +160,27 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
         }
         else {
             let val = (<HTMLInputElement>event.target).value;
-            this.fetch(val);
+            if(val.length >= this.minChars)
+                this.fetch(val);
         }
         
     }
 
     doSelectIndex(index:number):void {
         this.indexSelected = index;
-        this.selected.Description = this.list[this.indexSelected].Name;
+        //this.selected.Description = `${this.list[this.indexSelected].ID} - ${this.list[this.indexSelected].Name}`;
+        this.selected.Description = `${this.list[this.indexSelected].Name}`;
         this.selected.Value = this.list[this.indexSelected].ID;
 
         this.keyValue = this.selected.Value;
         this.onChange(this.keyValue);
         this.onSelect.emit(this.keyValue);
+
+        this.firstSet = false;
     }
 
     refreshSelected():  void {
-        this.list = this.list.map((d, i)=> {
+        this.list = this.list.filter((d, i)=> {
             if(i == this.indexSelected) d.Selected = true;
             else  d.Selected = false;
             return d;
@@ -128,22 +190,26 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
     onClickOption(item:AutocompleteItem, index:number):void {        
         this.dontBlur = true;
 
-        console.log("Click on: "+item.Name+", index: "+index);
         this.indexSelected = index;
         this.refreshSelected();
 
         this.doSelectIndex(this.indexSelected);
         this.dontBlur = false;
-
     }
 
      /** Implemented as part of ControlValueAccessor. */
-    onChange: (value:any) => any = () => { };
+    onChange: (value:any) => any = () => {
+        
+     };
 
     onTouched: () => any = () => { };
 
     writeValue(value: any) {
-        if(value == undefined) this.selected.Description = "";
+        if(!this.firstSet && (value == undefined || value == null || value == 0 )) { //this.selected.Description = ""; }
+            console.log(this.selected);
+            this.selected.Description = "";
+            this.firstSet = false;
+        } 
     }
 
     registerOnChange(fn: any) {
