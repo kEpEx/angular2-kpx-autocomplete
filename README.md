@@ -1,11 +1,12 @@
 # angular2-kpx-autocomplete
 
-[![npm version](https://badge.fury.io/js/angular2-kpx-autocomplete.svg)](https://badge.fury.io/js/angular2-kpx-autocomplete)
-[![downloads](https://img.shields.io/npm/dm/angular2-kpx-autocomplete.svg)](https://www.npmjs.com/package/angular2-kpx-autocomplete)
+[![npm version](https://badge.fury.io/js/angular2-kpx-autocomplete.svg)](https://badge.fury.io/js/angular2-kpx-autocomplete) [![downloads](https://img.shields.io/npm/dm/angular2-kpx-autocomplete.svg)](https://www.npmjs.com/package/angular2-kpx-autocomplete)
 
 Angular2 Typescript Autocomplete
 
 Simple autocomplete to filter server side results, you will get the ID property on your model.
+
+![Example](!example.gif)
 
 ## Installation
 
