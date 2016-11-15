@@ -1,4 +1,5 @@
 <div class="kpx-autocomplete-main"><input type="text" 
+                [formControl]="term"
                     [(ngModel)]="selected.Description" (focus)="onFocus()"  (keydown)="onKeyDown($event)" 
                     (blur)="onBlur()" (keyup)="onKeyUp($event)" class="input" placeholder="{{placeholder}}"
                      />

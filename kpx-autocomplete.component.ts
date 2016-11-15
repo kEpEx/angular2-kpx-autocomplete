@@ -2,8 +2,8 @@ import { Component, Input, Output, EventEmitter, SimpleChanges, forwardRef } fro
 import { Headers, Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { AutocompleteItem, SelectedAutocompleteValue } from './models';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import 'rxjs/add/operator/toPromise';
+import { ControlValueAccessor,FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import 'rxjs/add/operator/debounceTime';
 
 @Component({ 
     selector: 'kpx-autocomplete',
@@ -77,6 +77,7 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
 
     @Output('onSelect') onSelect: EventEmitter<string> = new EventEmitter<string>();
     
+    private term = new FormControl();
 
     private selected :SelectedAutocompleteValue;
     
@@ -91,6 +92,13 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
     constructor(public http: Http) {
         this.list = [];
         this.selected = new SelectedAutocompleteValue();
+
+         this.term.valueChanges
+             .debounceTime(300)
+             .subscribe((term)=> {
+                 if(term.length >= this.minChars)
+                    this.fetch(term)
+                });
     }
 
     ngOnInit(): void { 
@@ -111,10 +119,9 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
         this.indexSelected = 0;
          this.http
             .get(`${this.apiURL}?${this.paramGetSearch}=${search}`)
-            .toPromise()
-            .then((response:any) => {
+            .subscribe((response:any) => {
                 let ret = response.json();
-                let jsonret = this.dataPropertyName != '' ? ret[this.dataPropertyName] : ret;
+                let jsonret = this.dataPropertyName != '' && this.dataPropertyName != undefined ? ret[this.dataPropertyName] : ret;
                 this.list = jsonret.map(
                         (d:any)=>{ 
                                 return { ID: d[this.nameIDField], Name: d[this.nameDescriptionField] };
@@ -157,13 +164,7 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
                 else this.indexSelected--;
                 this.refreshSelected();
             }
-        }
-        else {
-            let val = (<HTMLInputElement>event.target).value;
-            if(val.length >= this.minChars)
-                this.fetch(val);
-        }
-        
+        }        
     }
 
     doSelectIndex(index:number):void {
