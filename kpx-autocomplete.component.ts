@@ -96,7 +96,7 @@ export class kpxAutocompleteComponent implements ControlValueAccessor {
          this.term.valueChanges
              .debounceTime(300)
              .subscribe((term)=> {
-                 if(term.length >= this.minChars)
+                 if(term != undefined && term.length >= this.minChars)
                     this.fetch(term)
                 });
     }
